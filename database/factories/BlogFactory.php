@@ -1,17 +1,31 @@
 <?php
+namespace Database\Factories;
 
-/* @var $factory \Illuminate\Database\Eloquent\Factory */
+use App\Models\Blog;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-use App\Blog;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+class BlogFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Blog::class;
 
-$factory->define(Blog::class, function (Faker\Generator $faker) {
-
-    return [
-        'title' => $faker->company,
-        'content' => $faker->paragraph,
-        'author_id' => \App\Models\User::factory()
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'title' => $this->faker->company,
+            'content' => $this->faker->paragraph,
+            'author_id' => 1
+        ];
+    }
+}
 
