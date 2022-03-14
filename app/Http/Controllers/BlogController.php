@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BlogResource;
 use App\Models\blog;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreblogRequest;
 use App\Http\Requests\UpdateblogRequest;
 
@@ -13,9 +15,19 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $blogQuery= auth()->user()->blogs()->latest();
+
+
+        if ($request->filled('status')) {
+            $blogQuery->where('status', $request->status);
+        }
+
+        $blogs= $blogQuery->get();
+
+        return BlogResource::collection( $blogs);
+
     }
 
     /**
@@ -34,9 +46,26 @@ class BlogController extends Controller
      * @param  \App\Http\Requests\StoreblogRequest  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(StoreblogRequest $request)
     {
         //
+        $request->validate([
+            'title'=>'required',
+            'content'=>'required'
+        ]);
+
+        $input= $request->all();
+
+        $input['slug']= str_slug($request->title);
+
+        if($request->filled('published_at')) {
+            $input['published_at'] = Carbon::parse($request->published_at);
+        }
+
+
+        $blog = auth()->user()->blogs()->create($input);
+
     }
 
     /**

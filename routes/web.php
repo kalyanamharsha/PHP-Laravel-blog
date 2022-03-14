@@ -22,5 +22,8 @@ Route::get('/email', function () {
 });
 */
 Auth::routes();
-
+Route::group(['middleware' => 'auth', 'prefix' => 'blog'], function () {
+    Route::get('blogs', 'App\Http\Controllers\BlogController@index')->name('blog-component');
+    Route::post('create_post', 'App\Http\Controllers\BlogController@createPost')->name('create_post');
+});
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
